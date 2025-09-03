@@ -14,12 +14,12 @@ export default function CatCard({ cat }: CatCardProps) {
   return (
     <Link href={`/details/${cat.id}?page=${currentPage}&sort=${currentSort}`} className="block group">
       <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 group-hover:scale-105">
-        <div className="relative h-64 w-full">
+        <div className="relative h-64 w-full bg-gray-100 flex items-center justify-center">
           <Image
             src={cat.url}
             alt={cat.breeds?.[0]?.name || 'Cat'}
             fill
-            className="object-cover"
+            className="object-contain p-2"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>

@@ -27,7 +27,7 @@ export default function CatCard({ cat }: CatCardProps) {
           <h3 className="font-semibold text-lg mb-2">
             {cat.breeds?.[0]?.name || 'Unknown Breed'}
           </h3>
-          <p className="text-gray-600 text-sm line-clamp-2">
+          <p className="text-gray-600 text-sm min-h-[2.8rem] line-clamp-2">
             {cat.breeds?.[0]?.description || 'No description available'}
           </p>
         </div>

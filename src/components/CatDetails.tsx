@@ -9,10 +9,23 @@ interface CatDetailsProps {
   cat: Cat | null;
   returnPage?: string;
   returnSort?: string;
+  returnBreed?: string;
 }
 
-export default function CatDetails({ cat, returnPage = '0', returnSort = 'random' }: CatDetailsProps) {
-  const returnUrl = `/?page=${returnPage}&sort=${returnSort}`;
+export default function CatDetails({
+  cat,
+  returnPage = '0',
+  returnSort = 'rand',
+  returnBreed,
+}: CatDetailsProps) {
+  const params = new URLSearchParams({
+    page: returnPage,
+    sort: returnSort,
+  });
+  if (returnBreed) params.set('breed', returnBreed);
+
+  const returnUrl = `/?${params.toString()}`;
+
   if (!cat) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -26,13 +39,14 @@ export default function CatDetails({ cat, returnPage = '0', returnSort = 'random
     );
   }
 
-  const breed = cat.breeds?.[0];
+  const breed = cat.breeds && cat.breeds.length > 0 ? cat.breeds[0] : null;
+  const isGif = cat.url.toLowerCase().endsWith('.gif');
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <Link
-          href={returnUrl} 
+          href={returnUrl}
           className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6"
         >
           <ArrowLeft size={20} className="mr-2" />
@@ -48,6 +62,7 @@ export default function CatDetails({ cat, returnPage = '0', returnSort = 'random
               className="object-contain"
               sizes="(max-width: 768px) 100vw, 80vw"
               priority
+              unoptimized={isGif}
             />
           </div>
 
@@ -56,7 +71,7 @@ export default function CatDetails({ cat, returnPage = '0', returnSort = 'random
               {breed?.name || 'Unknown Breed'}
             </h1>
 
-            {breed && (
+            {breed ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h2 className="text-xl font-semibold mb-3">Description</h2>
@@ -68,25 +83,31 @@ export default function CatDetails({ cat, returnPage = '0', returnSort = 'random
                 <div>
                   <h2 className="text-xl font-semibold mb-3">Details</h2>
                   <div className="space-y-2">
-                    <div>
-                      <span className="font-medium">Origin: </span>
-                      <span className="text-gray-700">{breed.origin}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">Temperament: </span>
-                      <span className="text-gray-700">{breed.temperament}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">Life Span: </span>
-                      <span className="text-gray-700">{breed.life_span} years</span>
-                    </div>
+                    {breed.origin && (
+                      <div>
+                        <span className="font-medium">Origin: </span>
+                        <span className="text-gray-700">{breed.origin}</span>
+                      </div>
+                    )}
+                    {breed.temperament && (
+                      <div>
+                        <span className="font-medium">Temperament: </span>
+                        <span className="text-gray-700">{breed.temperament}</span>
+                      </div>
+                    )}
+                    {breed.life_span && (
+                      <div>
+                        <span className="font-medium">Life Span: </span>
+                        <span className="text-gray-700">{breed.life_span} years</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-            )}
-
-            {!breed && (
-              <p className="text-gray-500">No breed information available for this cat.</p>
+            ) : (
+              <p className="text-gray-500">
+                No breed information available for this cat.
+              </p>
             )}
           </div>
         </div>
